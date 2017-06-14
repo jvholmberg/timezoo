@@ -1,0 +1,49 @@
+{% extends 'layout.nunjucks' %}
+
+{% block content %}
+
+<h1>Dashboard</h1>
+<form action="/api/organization/create" method="post">
+  <h3>Create Organization</h3>
+  <input type="text" name="name" placeholder="Organization" required autofocus>
+  <button type="submit">Create Organization</button>
+</form>
+
+<form action="/api/project/create" method="post">
+  <h3>Create Project</h3>
+  <select name='organization'>
+    {% for o in organizations %}
+      <option value='{{ o._id }}'>{{ o.name }}</option>
+    {% endfor %}
+  </select>
+  <input type="text" name="name" placeholder="Project" required autofocus>
+  <input type="text" name="description" placeholder="Description" required autofocus>
+  <input type="text" name="hours" placeholder="Hours" required autofocus>
+  <button type="submit">Create Project</button>
+</form>
+
+<form action="/api/timecode/create" method="post">
+  <h3>Create Timecode</h3>
+  <select name='organization'>
+    {% for o in organizations %}
+      <option value='{{ o._id }}'>{{ o.name }}</option>
+    {% endfor %}
+  </select>
+  <input type="text" name="shortname" placeholder="Shortname" required autofocus>
+  <input type="text" name="fullname" placeholder="Fullname" required autofocus>
+  <input type="text" name="description" placeholder="Description" required autofocus>
+  <button type="submit">Create Timecode</button>
+</form>
+
+{% for o in organizations %}
+  <div>
+    <a href="/time/{{ o.nameUnique }}">{{ o.name }}</a>
+  </div>
+{% endfor %}
+
+
+{% for p in projects %}
+  <span>{{ p.name }}</span>
+{% endfor %}
+
+{% endblock %}

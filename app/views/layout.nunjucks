@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/css/style.css">
+  {% if ENV_DEVELOPMENT %}
+    <script src="http://localhost:35729/livereload.js"></script>
+  {% endif %}
+</head>
+<body>
+  <div>
+    <a href="/">Index</a>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    <a href="/dashboard">Dashboard</a>
+  </div>
+  {% block content %}{% endblock %}
+
+  <div class="alert-bar">
+    {% for e in error %}
+      <div class="alert alert-danger" role="alert">
+        {{ e }}
+      </div>
+    {% endfor %}
+    {% for s in success %}
+      <div class="alert alert-success" role="alert">
+        {{ s }}
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

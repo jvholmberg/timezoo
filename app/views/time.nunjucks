@@ -1,0 +1,22 @@
+
+{% extends 'layout.nunjucks' %}
+
+{% block content %}
+
+<form action="/api/time/create" method="post">
+  <input type="text" name="description" placeholder="Description">
+  <input type="text" name="timestamp" placeholder="Date" required>
+  <input type="text" name="hours" placeholder="Hours" required>
+  <button type="submit">Create</button>
+</form>
+
+{% for t in times %}
+  <div>
+    <p>{{ t.toString() }}</p>
+  </div>
+{% endfor %}
+
+{% endblock %}
+// _organization: mongoose.Schema.Types.ObjectId,
+// _project: mongoose.Schema.Types.ObjectId,
+// _timecode: mongoose.Schema.Types.ObjectId,
