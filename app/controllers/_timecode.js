@@ -1,25 +1,19 @@
 var express = require('express'),
   router = express.Router(),
   mongoose = require('mongoose'),
-  TimeUtil = require('../utils/time');
+  TimecodeUtil = require('../utils/timecode');
 
 module.exports = function (app) {
-  app.use('/api/time', router);
+  app.use('/api/timecode', router);
 };
 
 router.post('/create', (req, res, next) => {
   if (!req.user) { return; }
 
-  // var data = {
-  //   'user': req.user._id,
-  //   'organization': req.
-  // };
-
-  TimeUtil.createRecord(req.body, (doc, msg) => {
+  TimecodeUtil.createRecord(req.body, (doc, msg) => {
     res.redirect('/login');
   }, (err) => {
     req.flash('error', err);
     res.redirect('/register');
   });
-  res.json(req.body);
 });

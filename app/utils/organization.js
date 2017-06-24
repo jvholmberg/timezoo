@@ -16,7 +16,7 @@ module.exports = {
         if (err) { return ecb('An internal error occurred'); }
         if (doc2.users.push(data.userId) == 1) {
           doc2.save();
-          return cb(doc2, 'Organization created successfully');
+          return cb(doc2);
         }
         return ecb('An internal error occurred');
       });
@@ -26,9 +26,7 @@ module.exports = {
     Organization.find({
       users: userId
     }, (err, docs) => {
-      if (err) {
-        return ecb('An internal error occurred');
-      }
+      if (err) { return ecb('An internal error occurred'); }
       return cb(docs);
     });
   }

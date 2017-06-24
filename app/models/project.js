@@ -5,7 +5,7 @@ var ProjectSchema = new Schema({
   name: { type: String, default: '' },
   description: { type: String, default: '' },
   hours: { type: Number, default: 0 },
-  organization: mongoose.Schema.Types.ObjectId,
+  users: { type: [mongoose.Schema.Types.ObjectId], default: [] },
   timecodes: { type: [mongoose.Schema.Types.ObjectId], default: [] }
 });
 

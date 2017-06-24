@@ -7,13 +7,16 @@ module.exports = {
       'name': data.name,
       'description': data.description,
       'hours': data.hours,
-      'organization': mongoose.Types.ObjectId(data.orgId)
-    };
-    console.log(query);
+      'organization': mongoose.Types.ObjectId(data.orgId),
 
+      projects: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+    };
     Project.create(query, (err, doc) => {
       if (err) { return ecb('An internal error occurred'); }
       return cb(doc);
     });
+  },
+  getRecordsInOrgForUser: (query) => {
+
   }
 };

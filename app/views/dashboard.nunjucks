@@ -24,11 +24,6 @@
 
 <form action="/api/timecode/create" method="post">
   <h3>Create Timecode</h3>
-  <select name='organization'>
-    {% for o in organizations %}
-      <option value='{{ o._id }}'>{{ o.name }}</option>
-    {% endfor %}
-  </select>
   <input type="text" name="shortname" placeholder="Shortname" required autofocus>
   <input type="text" name="fullname" placeholder="Fullname" required autofocus>
   <input type="text" name="description" placeholder="Description" required autofocus>
