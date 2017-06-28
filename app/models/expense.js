@@ -9,6 +9,4 @@ var ExpenseSchema = new Schema({
   debitable: { type: Boolean, default: false }
 });
 
-
-
 mongoose.model('Expense', ExpenseSchema);

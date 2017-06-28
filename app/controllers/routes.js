@@ -1,7 +1,6 @@
 var express = require('express'),
   router = express.Router(),
   OrganizationUtil = require('../utils/organization'),
-  ProjectUtil = require('../utils/project'),
   TimeUtil = require('../utils/time');
 
 module.exports = function (app) {

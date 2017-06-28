@@ -2,32 +2,58 @@ var mongoose = require('mongoose'),
   Organization = mongoose.model('Organization'),
   OrganizationName = mongoose.model('OrganizationName');
 
+// {
+//   name: { type: String, default: '' },
+//   nameUnique: { type: String, default: '' },
+//   admins: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+//   users: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+//   unrestrictedProjects: [{
+//     name: { type: String, default: '' },
+//     description: { type: String, default: '' }
+//   }],
+//   restrictedProjects: [{
+//     name: { type: String, default: '' },
+//     description: { type: String, default: '' },
+//     hours: { type: Number, default: 0 },
+//     admins: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+//     users: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+//   }],
+//   timecodes: [{
+//     accronym: { type: String, default: '' },
+//     name: { type: String, default: '' },
+//     description: { type: String, default: '' }
+//   }]
+// }
 module.exports = {
-  createRecord: (data, cb, ecb) => {
-    var query = { '_id': data.name },
-      update = { '$inc' : {'count' : 1}},
-      options = { 'upsert': true, 'new': true };
+  create: (data, cb, ecb) => {
 
-    OrganizationName.findOneAndUpdate(query, update, options, (err, doc1) => {
-      if (err) { return ecb('An internal error occurred'); }
-      query = { 'name': doc1._id, 'nameUnique': doc1._id + '-'+ doc1.count };
-
-      Organization.create(query, (err, doc2) => {
+    // Get nameUnique by quering OrganizationName collection
+    OrganizationName.findOneAndUpdate(
+      { '_id': data.name },
+      { '$inc' : {'count' : 1} },
+      { 'upsert': true, 'new': true },
+      (err, on) => {
         if (err) { return ecb('An internal error occurred'); }
-        if (doc2.users.push(data.userId) == 1) {
-          doc2.save();
-          return cb(doc2);
-        }
-        return ecb('An internal error occurred');
-      });
-    });
+
+        // Create Organization
+        Organization.create(
+          {
+            'name': on._id,
+            'nameUnique': on._id + '-'+ on.count
+          }, (err, o) => {
+            if (err) { return ecb('An internal error occurred'); }
+            o.admins.push(data.userId)
+            o.users.push(data.userId)
+            o.save();
+            return cb(o);
+          }
+        );
+      }
+    );
   },
-  getRecordsForUser: (userId, cb, ecb) => {
-    Organization.find({
-      users: userId
-    }, (err, docs) => {
-      if (err) { return ecb('An internal error occurred'); }
-      return cb(docs);
-    });
+  unrestrictedProjects: {
+    create: (data, cb, ecb) => {
+      Organization.findOneAndUpdate
+    }
   }
 };
