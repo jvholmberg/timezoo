@@ -36,9 +36,14 @@ router.get('/login', (req, res, next) => {
 */
 router.get('/dashboard', (req, res, next) => {
   if (!req.user) { return res.redirect('/login'); }
-  OrganizationUtil.getRecordsForUser(req.user._id, (docs, msg) => {
+  // res.render('dashboard', {
+  //   success: req.flash('success'),
+  //   error: req.flash('error')
+  // });
+  let data = { _id: req.user._id };
+  OrganizationUtil.getByUserId(data, (orgs, msg) => {
     res.render('dashboard', {
-      organizations: docs,
+      organizations: orgs,
       success: req.flash('success'),
       error: req.flash('error')
     });
@@ -48,26 +53,26 @@ router.get('/dashboard', (req, res, next) => {
   });
 });
 router.get('/time/:orgNameUnique', (req, res, next) => {
-  if (!req.user) { return res.redirect('/login'); }
-  let data = { userId: req.user.id, orgNameUnique: req.params.orgNameUnique };
-
-  // Get Projects in Organization for User
-  ProjectUtil.getRecordsInOrgForUser(data, (projects, msg) => {
-
-    // Get Times in Organization for User
-    TimeUtil.getRecordsInOrgForUser(data, (times, msg) => {
-      res.render('time', {
-        projects: projects,
-        times: times,
-        success: req.flash('success'),
-        error: req.flash('error')
-      });
-    }, (err) => {
-      req.flash('error');
-      res.redirect('/');
-    });
-  }, (err) => {
-    req.flash('error');
-    res.redirect('/');
-  });
+  // if (!req.user) { return res.redirect('/login'); }
+  // let data = { userId: req.user.id, orgNameUnique: req.params.orgNameUnique };
+  //
+  // // Get Projects in Organization for User
+  // ProjectUtil.getRecordsInOrgForUser(data, (projects, msg) => {
+  //
+  //   // Get Times in Organization for User
+  //   TimeUtil.getRecordsInOrgForUser(data, (times, msg) => {
+  //     res.render('time', {
+  //       projects: projects,
+  //       times: times,
+  //       success: req.flash('success'),
+  //       error: req.flash('error')
+  //     });
+  //   }, (err) => {
+  //     req.flash('error');
+  //     res.redirect('/');
+  //   });
+  // }, (err) => {
+  //   req.flash('error');
+  //   res.redirect('/');
+  // });
 });

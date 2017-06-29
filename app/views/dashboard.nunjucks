@@ -9,36 +9,50 @@
   <button type="submit">Create Organization</button>
 </form>
 
-<form action="/api/project/create" method="post">
-  <h3>Create Project</h3>
-  <select name='organization'>
+<form action="/api/organization/unrestrictedproject/create" method="post">
+  <h3>Create Unrestricted Project</h3>
+  <select name='_id'>
     {% for o in organizations %}
       <option value='{{ o._id }}'>{{ o.name }}</option>
     {% endfor %}
   </select>
-  <input type="text" name="name" placeholder="Project" required autofocus>
-  <input type="text" name="description" placeholder="Description" required autofocus>
-  <input type="text" name="hours" placeholder="Hours" required autofocus>
+  <input type="text" name="accronym" placeholder="Accronym" required>
+  <input type="text" name="name" placeholder="Name" required>
+  <input type="text" name="description" placeholder="Description" required>
   <button type="submit">Create Project</button>
 </form>
 
-<form action="/api/timecode/create" method="post">
+<form action="/api/organization/restrictedproject/create" method="post">
+  <h3>Create Restricted Project</h3>
+  <select name='_id'>
+    {% for o in organizations %}
+      <option value='{{ o._id }}'>{{ o.name }}</option>
+    {% endfor %}
+  </select>
+  <input type="text" name="accronym" placeholder="Accronym" required>
+  <input type="text" name="name" placeholder="Name" required>
+  <input type="text" name="description" placeholder="Description" required>
+  <input type="text" name="hours" placeholder="Hours" required>
+  <button type="submit">Create Project</button>
+</form>
+
+{# <form action="/api/timecode/create" method="post">
   <h3>Create Timecode</h3>
   <input type="text" name="shortname" placeholder="Shortname" required autofocus>
   <input type="text" name="fullname" placeholder="Fullname" required autofocus>
   <input type="text" name="description" placeholder="Description" required autofocus>
   <button type="submit">Create Timecode</button>
-</form>
+</form> #}
 
-{% for o in organizations %}
+ {% for o in organizations %}
   <div>
     <a href="/time/{{ o.nameUnique }}">{{ o.name }}</a>
   </div>
 {% endfor %}
 
 
-{% for p in projects %}
+{# {% for p in projects %}
   <span>{{ p.name }}</span>
-{% endfor %}
+{% endfor %}  #}
 
 {% endblock %}

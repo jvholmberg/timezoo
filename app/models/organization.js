@@ -7,10 +7,12 @@ var OrganizationSchema = new Schema({
   admins: { type: [mongoose.Schema.Types.ObjectId], default: [] },
   users: { type: [mongoose.Schema.Types.ObjectId], default: [] },
   unrestrictedProjects: [{
+    accronym: { type: String, default: '' },
     name: { type: String, default: '' },
     description: { type: String, default: '' }
   }],
   restrictedProjects: [{
+    accronym: { type: String, default: '' },
     name: { type: String, default: '' },
     description: { type: String, default: '' },
     hours: { type: Number, default: 0 },
