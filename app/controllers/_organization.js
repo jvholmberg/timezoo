@@ -8,10 +8,9 @@ module.exports = function (app) {
 };
 
 router.post('/create', (req, res, next) => {
-  let data = {
+  let data = { organization: {
     name: req.body.name,
-    admins: [req.user._id],
-    user: []
+    admins: [req.user._id] }
   };
   OrganizationUtil.create(data, (doc, msg) => {
     res.redirect('/dashboard');
@@ -20,35 +19,19 @@ router.post('/create', (req, res, next) => {
     res.redirect('/dashboard');
   });
 });
-router.post('/unrestrictedproject/create', (req, res, next) => {
+router.post('/project/create', (req, res, next) => {
   let data = {
     _id: req.body._id,
-    unrestrictedProjects: {
+    projects: {
       accronym: req.body.accronym,
       name: req.body.name,
       description: req.body.description
     }
   };
-  OrganizationUtil.unrestrictedProjects.create(data, (doc, msg) => {
-    res.redirect('/dashboard');
-  }, (err) => {
-    req.flash('error');
-    res.redirect('/dashboard');
-  });
-});
-router.post('/restrictedproject/create', (req, res, next) => {
-  let data = {
-    _id: req.body._id,
-    restrictedProjects: {
-      accronym: req.body.accronym,
-      name: req.body.name,
-      description: req.body.description,
-      hours: req.body.hours,
-      admins: [req.user._id],
-      users: []
-    }
-  };
-  OrganizationUtil.restrictedProjects.create(data, (doc, msg) => {
+  if (req.body.teamleaders !== null) { data.projects['teamleaders'] = [req.user._id]; }
+  if (req.body.teamleaders !== null) { data.projects['users'] = []; }
+  if (req.body.hours !== null) { data.projects['hours'] = req.body.hours; }
+  OrganizationUtil.projects.create(data, (o, msg) => {
     res.redirect('/dashboard');
   }, (err) => {
     req.flash('error');

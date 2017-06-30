@@ -8,7 +8,7 @@ module.exports = function(app) {
 };
 
 router.post('/register', (req, res) => {
-  UserUtil.createRecord(req.body, (doc, msg) => {
+  UserUtil.create(req.body, (doc, msg) => {
     res.redirect('/login');
   }, (err) => {
     req.flash('error', err);

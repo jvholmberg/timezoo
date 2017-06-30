@@ -7,7 +7,7 @@ var UserSchema = new Schema({
   firstname: { type: String, default: '' },
   lastname: { type: String, default: '' },
   description: { type: String, default: '' },
-  organization: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+  organizations: [mongoose.Schema.Types.ObjectId]
 });
 
 mongoose.model('User', UserSchema);

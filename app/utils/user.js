@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
   bcrypt = require('bcryptjs');
 
 module.exports = {
-  createRecord: (body, cb, ecb) => {
+  create: (body, cb, ecb) => {
     if (body.password !== body.password2) {
       return ecb('Passwords does not match');
     }
@@ -32,5 +32,16 @@ module.exports = {
         });
       });
     });
+  },
+  addToOrganization: (data, cb, ecb) => {
+    User.findOneAndUpdate(
+      { '_id': data.user._id },
+      { '$push': { 'organizations': data.organization._id } },
+      { 'upsert': true, 'new': true },
+      (err, o) => {
+        if (err) { return ecb('An internal error occurred'); }
+        return cb (o);
+      }
+    );
   }
 };

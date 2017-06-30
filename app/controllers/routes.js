@@ -36,12 +36,8 @@ router.get('/login', (req, res, next) => {
 */
 router.get('/dashboard', (req, res, next) => {
   if (!req.user) { return res.redirect('/login'); }
-  // res.render('dashboard', {
-  //   success: req.flash('success'),
-  //   error: req.flash('error')
-  // });
-  let data = { _id: req.user._id };
-  OrganizationUtil.getByUserId(data, (orgs, msg) => {
+  let data = { user: { organizations: req.user.organizations } };
+  OrganizationUtil.getAll(data, (orgs, msg) => {
     res.render('dashboard', {
       organizations: orgs,
       success: req.flash('success'),
@@ -52,21 +48,31 @@ router.get('/dashboard', (req, res, next) => {
     res.redirect('/');
   });
 });
-router.get('/time/:orgNameUnique', (req, res, next) => {
-  // if (!req.user) { return res.redirect('/login'); }
-  // let data = { userId: req.user.id, orgNameUnique: req.params.orgNameUnique };
-  //
+router.get('/:orgNameUnique/time', (req, res, next) => {
+  if (!req.user) { return res.redirect('/login'); }
+  let data = { userId: req.user.id, orgNameUnique: req.params.orgNameUnique };
+
+  OrganizationUtil.getByNameUnique(data, (org, msg) => {
+    res.render('time', {
+      projects: projects,
+      times: times,
+      success: req.flash('success'),
+      error: req.flash('error')
+    });
+  }, (err) => {
+    req.flash('error');
+    res.redirect('/dashboard');
+  });
+
+
+
+
   // // Get Projects in Organization for User
   // ProjectUtil.getRecordsInOrgForUser(data, (projects, msg) => {
   //
   //   // Get Times in Organization for User
   //   TimeUtil.getRecordsInOrgForUser(data, (times, msg) => {
-  //     res.render('time', {
-  //       projects: projects,
-  //       times: times,
-  //       success: req.flash('success'),
-  //       error: req.flash('error')
-  //     });
+  //
   //   }, (err) => {
   //     req.flash('error');
   //     res.redirect('/');

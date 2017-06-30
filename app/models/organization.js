@@ -4,20 +4,14 @@ var mongoose = require('mongoose'),
 var OrganizationSchema = new Schema({
   name: { type: String, default: '' },
   nameUnique: { type: String, default: '' },
-  admins: { type: [mongoose.Schema.Types.ObjectId], default: [] },
-  users: { type: [mongoose.Schema.Types.ObjectId], default: [] },
-  unrestrictedProjects: [{
-    accronym: { type: String, default: '' },
-    name: { type: String, default: '' },
-    description: { type: String, default: '' }
-  }],
-  restrictedProjects: [{
+  admins: [mongoose.Schema.Types.ObjectId],
+  projects: [{
     accronym: { type: String, default: '' },
     name: { type: String, default: '' },
     description: { type: String, default: '' },
-    hours: { type: Number, default: 0 },
-    admins: { type: [mongoose.Schema.Types.ObjectId], default: [] },
-    users: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+    hours: Number,
+    teamleaders: [mongoose.Schema.Types.ObjectId],
+    users: [mongoose.Schema.Types.ObjectId]
   }],
   timecodes: [{
     accronym: { type: String, default: '' },
@@ -44,7 +38,7 @@ var OrganizationSchema = new Schema({
 
   Requirement analysis,
   Internal meeting,
-  External Meeting,
+  Project Meeting,
   Administration,
   Application Engineering,
   Deployment preparation,

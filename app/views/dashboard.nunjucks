@@ -9,20 +9,7 @@
   <button type="submit">Create Organization</button>
 </form>
 
-<form action="/api/organization/unrestrictedproject/create" method="post">
-  <h3>Create Unrestricted Project</h3>
-  <select name='_id'>
-    {% for o in organizations %}
-      <option value='{{ o._id }}'>{{ o.name }}</option>
-    {% endfor %}
-  </select>
-  <input type="text" name="accronym" placeholder="Accronym" required>
-  <input type="text" name="name" placeholder="Name" required>
-  <input type="text" name="description" placeholder="Description" required>
-  <button type="submit">Create Project</button>
-</form>
-
-<form action="/api/organization/restrictedproject/create" method="post">
+<form action="/api/organization/project/create" method="post">
   <h3>Create Restricted Project</h3>
   <select name='_id'>
     {% for o in organizations %}
@@ -32,7 +19,7 @@
   <input type="text" name="accronym" placeholder="Accronym" required>
   <input type="text" name="name" placeholder="Name" required>
   <input type="text" name="description" placeholder="Description" required>
-  <input type="text" name="hours" placeholder="Hours" required>
+  <input type="text" name="hours" placeholder="Hours">
   <button type="submit">Create Project</button>
 </form>
 
@@ -46,13 +33,8 @@
 
  {% for o in organizations %}
   <div>
-    <a href="/time/{{ o.nameUnique }}">{{ o.name }}</a>
+    <a href="/{{ o.nameUnique }}/report">{{ o.name }}</a>
   </div>
 {% endfor %}
-
-
-{# {% for p in projects %}
-  <span>{{ p.name }}</span>
-{% endfor %}  #}
 
 {% endblock %}
