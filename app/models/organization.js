@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
 
 var OrganizationSchema = new Schema({
   name: { type: String, default: '' },
+  description: { type: String, default: '' },
   nameUnique: { type: String, default: '' },
   admins: [mongoose.Schema.Types.ObjectId],
   projects: [{

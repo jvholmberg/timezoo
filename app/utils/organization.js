@@ -41,10 +41,26 @@ module.exports = {
     );
   },
   update: (data, cb, ecb) => {
-
+    Organization.findOneAndUpdate(
+      { '_id': data._id },
+      { 'description': data.description },
+      { 'upsert': false, 'new': true },
+      (err, organization) => {
+        if (err) { return ecb('An internal error occurred'); }
+        return cb (organization);
+      }
+    );
   },
   delete: (data, cb, ecb) => {
-
+    Organization.findOneAndUpdate(
+      { '_id': data._id },
+      { 'description': data.description },
+      { 'upsert': false, 'new': true },
+      (err, o) => {
+        if (err) { return ecb('An internal error occurred'); }
+        return cb (o);
+      }
+    );
   },
   getOne: (data, cb, ecb) => {
     Organization.findOne({ '_id': { '$in': data.organization._id } }, (err, organization) => {
@@ -57,6 +73,19 @@ module.exports = {
       if (err) { return ecb('An internal error occurred'); }
       return cb(organizations);
     });
+  },
+  projects: {
+    create: (data, cb, ecb) => {
+      Organization.findOneAndUpdate(
+        { '_id': data._id },
+        { '$push': { 'projects': data.projects } },
+        { 'upsert': true, 'new': true },
+        (err, o) => {
+          if (err) { return ecb('An internal error occurred'); }
+          return cb (o);
+        }
+      );
+    }
   }
 };
 

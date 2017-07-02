@@ -28,9 +28,11 @@ router.post('/project/create', (req, res, next) => {
       description: req.body.description
     }
   };
-  if (req.body.teamleaders !== null) { data.projects['teamleaders'] = [req.user._id]; }
-  if (req.body.teamleaders !== null) { data.projects['users'] = []; }
-  if (req.body.hours !== null) { data.projects['hours'] = req.body.hours; }
+  if (req.body.restricted) {
+    data.projects['teamleaders'] = [req.user._id];
+    data.projects['users'] = [];
+  }
+  if (req.body.hours) { data.projects['hours'] = req.body.hours; }
   OrganizationUtil.projects.create(data, (o, msg) => {
     res.redirect('/dashboard');
   }, (err) => {
