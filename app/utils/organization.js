@@ -1,100 +1,139 @@
 var mongoose = require('mongoose'),
   Organization = mongoose.model('Organization'),
   OrganizationName = mongoose.model('OrganizationName'),
+  Invitation = mongoose.model('Invitation'),
   User = mongoose.model('User');
 
 module.exports = {
-
-  create: (data, cb, ecb) => {
-
-    // Create nameUnique by quering OrganizationName collection
-    OrganizationName.findOneAndUpdate(
-      { '_id': data.organization.name },
-      { '$inc' : { 'count' : 1 } },
-      { 'upsert': true, 'new': true },
-      (err, organizationName) => {
-        if (err) { return ecb('An internal error occurred'); }
-
-        // Create Organization
-        Organization.create(
-          {
-            'name': organizationName._id,
-            'nameUnique': organizationName._id + '-'+ organizationName.count
-          }, (err, organization) => {
-            if (err) { return ecb('An internal error occurred'); }
-            organization.admins.push(data.organization.admins[0])
-            organization.save();
-
-            // Add Organization to User
-            User.findOneAndUpdate(
-              { '_id': data.organization.admins[0]},
-              { '$push': { 'organizations': organization._id } },
-              { 'upsert': true, 'new': true },
-              (err, user) => {
-                if (err) { return ecb('An internal error occurred'); }
-                return cb(organization);
-              }
-            );
-          }
-        );
-      }
-    );
-  },
-  update: (data, cb, ecb) => {
-    Organization.findOneAndUpdate(
-      { '_id': data._id },
-      { 'description': data.description },
-      { 'upsert': false, 'new': true },
-      (err, organization) => {
-        if (err) { return ecb('An internal error occurred'); }
-        return cb (organization);
-      }
-    );
-  },
-  delete: (data, cb, ecb) => {
-    Organization.findOneAndUpdate(
-      { '_id': data._id },
-      { 'description': data.description },
-      { 'upsert': false, 'new': true },
-      (err, o) => {
-        if (err) { return ecb('An internal error occurred'); }
-        return cb (o);
-      }
-    );
-  },
-  getOne: (data, cb, ecb) => {
-    Organization.findOne({ '_id': { '$in': data.organization._id } }, (err, organization) => {
-      if (err) { return ecb('An internal error occurred'); }
-      return cb(organization);
-    });
-  },
-  getAll: (data, cb, ecb) => {
-    Organization.find({ '_id': { '$in': data.user.organizations } }, (err, organizations) => {
-      if (err) { return ecb('An internal error occurred'); }
-      return cb(organizations);
-    });
-  },
+  create: createOrganization,
+  update: updateOrganization,
+  delete: deleteOrganization,
+  getById: getOrganizationById,
+  getByNameUnique: getOrganizationByNameUnique,
+  getAll: getOrganizationsForUser,
   projects: {
-    create: (data, cb, ecb) => {
-      Organization.findOneAndUpdate(
-        { '_id': data._id },
-        { '$push': { 'projects': data.projects } },
-        { 'upsert': true, 'new': true },
-        (err, o) => {
-          if (err) { return ecb('An internal error occurred'); }
-          return cb (o);
-        }
-      );
-    }
+    create: createProject,
+    getOne: getProject
+  },
+  timecodes: {
+    create: createTimecode
   }
 };
 
+function createOrganization(data, cb, ecb) {
 
+  // Create nameUnique by quering OrganizationName collection
+  OrganizationName.findOneAndUpdate(
+    { '_id': data.organization.name },
+    { '$inc' : { 'count' : 1 } },
+    { 'upsert': true, 'new': true },
+    (err, orgName) => {
+      if (err) { return ecb('An internal error occurred'); }
 
+      // Create Organization
+      Organization.create(
+        {
+          'name': orgName._id,
+          'nameUnique': orgName._id + '-'+ orgName.count
+        }, (err, org) => {
+          if (err) { return ecb('An internal error occurred'); }
+          org.admins.push(data.organization.admins[0])
+          org.save();
 
+          // Add Organization to User
+          User.findOneAndUpdate(
+            { '_id': data.organization.admins[0]},
+            { '$push': { 'organizations': organization._id } },
+            { 'upsert': true, 'new': true },
+            (err, user) => {
+              if (err) { return ecb('An internal error occurred'); }
+              return cb(org);
+            }
+          );
+        }
+      );
+    }
+  );
+}
+function updateOrganization(data, cb, ecb) {
+  Organization.findOneAndUpdate(
+    { '_id': data._id },
+    { 'description': data.description },
+    { 'upsert': false, 'new': true },
+    (err, org) => {
+      if (err) { return ecb('An internal error occurred'); }
+      return cb (org);
+    }
+  );
+}
+function deleteOrganization(data, cb, ecb) {
+  console.log(data);
+}
+function getOrganizationById(data, cb, ecb) {
+  Organization.findOne(
+    { '_id': { '$in': data.organization._id } },
+    (err, org) => {
+      if (err) { return ecb('An internal error occurred'); }
+      return cb(org);
+    }
+  );
+}
+function getOrganizationByNameUnique(data, cb, ecb) {
+  Organization.findOne(
+    { 'nameUnique': data.nameUnique },
+    (err, org) => {
+      if (err) { return ecb('An internal error occurred'); }
+      return cb(org);
+    }
+  );
+}
+function getOrganizationsForUser(data, cb, ecb) {
+  Organization.find(
+    { '_id': { '$in': data.user.organizations } },
+    (err, orgs) => {
+      if (err) { return ecb('An internal error occurred'); }
+      return cb(orgs);
+    }
+  );
+}
 
+function createProject(data, cb, ecb) {
+  Organization.findOneAndUpdate(
+    { '_id': data._id },
+    { '$push': { 'projects': data.projects } },
+    { 'upsert': true, 'new': true },
+    (err, org) => {
+      if (err) { return ecb('An internal error occurred'); }
+      return cb (org);
+    }
+  );
+}
+function getProject(data, cb, ecb) {
+  Organization.findOne(
+    { '_id': data._id },
+    (err, org) => {
+      if (err) { return ecb('An internal error occurred'); }
+      for (let i = 0; i < org.projects.length; i++) {
+        if (org.projects[i]._id === data.projects._id) {
+          return cb(org.projects[i]);
+        }
+      }
+      return ecb('Project not found');
+    }
+  );
+}
 
-
+function createTimecode(data, cb, ecb) {
+  Organization.findOneAndUpdate(
+    { '_id': data._id },
+    { '$push': { 'timecodes': data.timecodes } },
+    { 'upsert': true, 'new': true },
+    (err, org) => {
+      if (err) { return ecb('An internal error occurred'); }
+      return cb (org);
+    }
+  );
+}
 
 
 

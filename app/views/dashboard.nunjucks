@@ -10,7 +10,7 @@
 </form>
 
 <form action="/api/organization/project/create" method="post">
-  <h3>Create Restricted Project</h3>
+  <h3>Create Project</h3>
   <select name='_id'>
     {% for o in organizations %}
       <option value='{{ o._id }}'>{{ o.name }}</option>
@@ -27,6 +27,30 @@
   <button type="submit">Create Project</button>
 </form>
 
+<form action="/api/organization/timecode/create" method="post">
+  <h3>Create Timecode</h3>
+  <select name='_id'>
+    {% for o in organizations %}
+      <option value='{{ o._id }}'>{{ o.name }}</option>
+    {% endfor %}
+  </select>
+  <input type="text" name="accronym" placeholder="Accronym" required>
+  <input type="text" name="name" placeholder="Name" required>
+  <input type="text" name="description" placeholder="Description" required>
+  <button type="submit">Create Timecode</button>
+</form>
+
+<form action="/api/organization/admins/add" method="post">
+  <h3>Add admin</h3>
+  <select name='_id'>
+    {% for o in organizations %}
+      <option value='{{ o._id }}'>{{ o.name }}</option>
+    {% endfor %}
+  </select>
+  <input type="email" name="admins" placeholder="Email" required>
+  <button type="submit">Add admin</button>
+</form>
+
 {# <form action="/api/timecode/create" method="post">
   <h3>Create Timecode</h3>
   <input type="text" name="shortname" placeholder="Shortname" required autofocus>
@@ -37,7 +61,7 @@
 
  {% for o in organizations %}
   <div>
-    <a href="/{{ o.nameUnique }}/report">{{ o.name }}</a>
+    <a href="/{{ o.nameUnique }}/time">{{ o.name }}</a>
   </div>
 {% endfor %}
 

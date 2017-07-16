@@ -8,9 +8,7 @@ module.exports = function (app) {
 };
 
 router.get('/', (req, res, next) => {
-  res.render('index', {
-
-  });
+  res.render('index', {});
 });
 
 /*
@@ -50,12 +48,11 @@ router.get('/dashboard', (req, res, next) => {
 });
 router.get('/:orgNameUnique/time', (req, res, next) => {
   if (!req.user) { return res.redirect('/login'); }
-  let data = { userId: req.user.id, orgNameUnique: req.params.orgNameUnique };
+  let data = { nameUnique: req.params.orgNameUnique };
 
   OrganizationUtil.getByNameUnique(data, (org, msg) => {
     res.render('time', {
-      projects: projects,
-      times: times,
+      projects: org.projects,
       success: req.flash('success'),
       error: req.flash('error')
     });
