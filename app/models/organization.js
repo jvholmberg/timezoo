@@ -12,7 +12,8 @@ var OrganizationSchema = new Schema({
     description: { type: String, default: '' },
     hours: Number,
     teamleaders: [mongoose.Schema.Types.ObjectId],
-    users: [mongoose.Schema.Types.ObjectId]
+    users: [mongoose.Schema.Types.ObjectId],
+    restricted: { type: String, default: false }
   }],
   timecodes: [{
     accronym: { type: String, default: '' },
@@ -23,14 +24,15 @@ var OrganizationSchema = new Schema({
 
 /*
 
-  @unrestrictedProjects: This is the projects that has no timeframe, all users
-  in the organization can report on them. For example "Internal Training",
-  this is something that has no timeframe and all employees should be able to
-  report to at any given time.
+  @unrestrictedProjects: This is the projects that everyone can report to
+  in an organization they usually have no timeframe for example
+  "Internal Training" but in a smaller organization where the entire organization
+  works as a single unit this may be used for customer work aswell.
 
-  @restrictedProjects: This is the active projects being worked on during a
-  timeframe. These projects also have a designated team which are allowed to
-  report on them.
+  @restrictedProjects: This is the projects being worked on by a designated team. 
+  It's only the members of the team which are allowed to report on the project.
+  This will often be used for customer work in a larger organization and most
+  certainly never used in a smaller organization since there isnt enough employees.
 
   @timecodes: Timecodes are global for organization. In the scenario
   of organization being in the tech sector examples of timecodes would be

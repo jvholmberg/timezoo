@@ -8,6 +8,40 @@ module.exports = function (app) {
 };
 
 router.post('/create', (req, res, next) => {
+  let isValid = true;
+  if (!req.user) { isValid = false; }
+  if (!req.body.organization) { isValid = false; }
+  if (!req.body.project) { isValid = false; }
+  if (!req.body.timecode) { isValid = false; }
+  if (!req.body.timestamp) { isValid = false; }
+  if (!req.body.description) { isValid = false; }
+  if (!req.body.hours) { isValid = false; }
+  if (!isValid) {
+    req.flash('error');
+    res.redirect('/dashboard');
+  }
+
+  let data = {
+    user: {
+      _id: req.user._id
+    },
+    organization: {
+      _id: req.body.organization,
+      projects: {
+        accronym: req.body.project
+      },
+      timecodes: {
+        accronym: req.body.timecode
+      }
+    },
+    time: {
+      timestamp: req.body.timestamp,
+      description: req.body.description,
+      hours: req.body.hours
+    }
+  };
+
+
   TimeUtil.create(data, (doc, msg) => {
     res.redirect('/dashboard');
   }, (err) => {

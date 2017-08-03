@@ -23,11 +23,11 @@ module.exports = {
           User.create({
             username: body.username,
             password: hash
-          }, (err, doc) => {
+          }, (err, newUser) => {
             if (err) {
               return ecb('An internal error occurred when creating user');
             }
-            return cb(doc, 'User created successfully');
+            return cb(newUser);
           });
         });
       });
@@ -38,9 +38,9 @@ module.exports = {
       { '_id': data.user._id },
       { '$push': { 'organizations': data.organization._id } },
       { 'upsert': true, 'new': true },
-      (err, o) => {
+      (err, user) => {
         if (err) { return ecb('An internal error occurred'); }
-        return cb (o);
+        return cb(user);
       }
     );
   }
