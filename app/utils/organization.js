@@ -43,7 +43,7 @@ function createOrganization(data, cb, ecb) {
           // Add Organization to User
           User.findOneAndUpdate(
             { '_id': data.organization.admins[0]},
-            { '$push': { 'organizations': organization._id } },
+            { '$push': { 'organizations': org._id } },
             { 'upsert': true, 'new': true },
             (err, user) => {
               if (err) { return ecb('An internal error occurred'); }
@@ -80,7 +80,7 @@ function getOrganizationById(data, cb, ecb) {
 }
 function getOrganizationByNameUnique(data, cb, ecb) {
   Organization.findOne(
-    { 'nameUnique': data.nameUnique },
+    { 'nameUnique': data.organization.nameUnique },
     (err, org) => {
       if (err) { return ecb('An internal error occurred'); }
       return cb(org);

@@ -48,11 +48,13 @@ router.get('/dashboard', (req, res, next) => {
 });
 router.get('/:orgNameUnique/time', (req, res, next) => {
   if (!req.user) { return res.redirect('/login'); }
-  let data = { nameUnique: req.params.orgNameUnique };
+  let data = { 'organization': { nameUnique: req.params.orgNameUnique } };
 
   OrganizationUtil.getByNameUnique(data, (org, msg) => {
     res.render('time', {
+      nameUnique: org.nameUnique,
       projects: org.projects,
+      timecodes: org.timecodes,
       success: req.flash('success'),
       error: req.flash('error')
     });

@@ -3,18 +3,24 @@
 
 {% block content %}
 
-<form action="/api/time/create" method="post">
-  <select>
+<form action="/api/time/create/{{ nameUnique }}" method="post">
+  <select name="project">
     {% for p in projects %}
       <div>
         <option value="{{ p._id }}">{{ p.name }}</option>
       </div>
     {% endfor %}
   </select>
+    <select name="timecode">
+      {% for t in timecodes %}
+        <div>
+          <option value="{{ t._id }}">{{ t.name }}</option>
+        </div>
+      {% endfor %}
+    </select>
 
-  <input type="date" name="date" placeholder="date">
-  <input type="text" name="description" placeholder="Description">
   <input type="text" name="timestamp" placeholder="Date" required>
+  <input type="text" name="description" placeholder="Description">
   <input type="text" name="hours" placeholder="Hours" required>
   <button type="submit">Create</button>
 </form>

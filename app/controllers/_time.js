@@ -1,16 +1,17 @@
 var express = require('express'),
   router = express.Router(),
   mongoose = require('mongoose'),
-  TimeUtil = require('../utils/time');
+  TimeUtil = require('../utils/time'),
+  OrganizationUtil = require('../utils/organization');
 
 module.exports = function (app) {
   app.use('/api/time', router);
 };
 
-router.post('/create', (req, res, next) => {
+router.post('/create/:orgNameUnique', (req, res, next) => {
   let isValid = true;
   if (!req.user) { isValid = false; }
-  if (!req.body.organization) { isValid = false; }
+  //if (!req.body.organization) { isValid = false; }
   if (!req.body.project) { isValid = false; }
   if (!req.body.timecode) { isValid = false; }
   if (!req.body.timestamp) { isValid = false; }
@@ -20,30 +21,37 @@ router.post('/create', (req, res, next) => {
     req.flash('error');
     res.redirect('/dashboard');
   }
-
   let data = {
-    user: {
-      _id: req.user._id
+    'user': {
+      '_id': req.user._id
     },
-    organization: {
-      _id: req.body.organization,
-      projects: {
-        accronym: req.body.project
+    'organization': {
+      'nameUnique': req.params.orgNameUnique,
+      'projects': {
+        '_id': req.body.project
       },
-      timecodes: {
-        accronym: req.body.timecode
+      'timecodes': {
+        '_id': req.body.timecode
       }
     },
-    time: {
-      timestamp: req.body.timestamp,
-      description: req.body.description,
-      hours: req.body.hours
+    'time': {
+      'timestamp': req.body.timestamp,
+      'description': req.body.description,
+      'hours': req.body.hours
     }
   };
-
-
-  TimeUtil.create(data, (doc, msg) => {
-    res.redirect('/dashboard');
+  console.log(data);
+  OrganizationUtil.getByNameUnique(data, (org, msg) => {
+    // Get id of project & timecode from org
+    data.organization['_id'] = org._id;
+    console.log(org);
+    console.log(data);
+    TimeUtil.create(data, (doc, msg) => {
+      res.redirect('/dashboard');
+    }, (err) => {
+      req.flash('error');
+      res.redirect('/dashboard');
+    });
   }, (err) => {
     req.flash('error');
     res.redirect('/dashboard');

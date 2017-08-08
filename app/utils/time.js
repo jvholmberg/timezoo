@@ -2,16 +2,18 @@ var mongoose = require('mongoose'),
   Time = mongoose.model('Time');
 
 module.exports = {
-  createRecord: (data, cb, ecb) => {
+  create: (data, cb, ecb) => {
     Time.create({
-      name: data.name
+      user: data.user._id,
+      organization: data.organization._id,
+      project: data.organization.projects._id,
+      timecode: data.organization.timecodes._id,
+      description: data.time.description,
+      timestamp: data.time.timestamp,
+      hours: data.time.hours
     }, (err, doc) => {
       if (err) { return ecb('An internal error occurred'); }
-      if (doc._users.push(data.userId) == 1) {
-        doc.save();
-        return cb(doc);
-      }
-      return ecb('An internal error occurred');
+      return cb(doc);
     });
   },
   getRecordsInOrgForUser: (data, cb, ecb) => {
