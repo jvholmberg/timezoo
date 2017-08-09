@@ -62,22 +62,4 @@ router.get('/:orgNameUnique/time', (req, res, next) => {
     req.flash('error');
     res.redirect('/dashboard');
   });
-
-
-
-
-  // // Get Projects in Organization for User
-  // ProjectUtil.getRecordsInOrgForUser(data, (projects, msg) => {
-  //
-  //   // Get Times in Organization for User
-  //   TimeUtil.getRecordsInOrgForUser(data, (times, msg) => {
-  //
-  //   }, (err) => {
-  //     req.flash('error');
-  //     res.redirect('/');
-  //   });
-  // }, (err) => {
-  //   req.flash('error');
-  //   res.redirect('/');
-  // });
 });

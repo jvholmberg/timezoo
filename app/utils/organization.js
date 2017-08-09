@@ -20,6 +20,14 @@ module.exports = {
   }
 };
 
+/*
+
+  @fn: createOrganization()
+  @modified: 170809
+  @inParams:
+  - data[organization][name]
+  - data[organization][admins]
+*/
 function createOrganization(data, cb, ecb) {
 
   // Create nameUnique by quering OrganizationName collection
@@ -34,11 +42,10 @@ function createOrganization(data, cb, ecb) {
       Organization.create(
         {
           'name': orgName._id,
-          'nameUnique': orgName._id + '-'+ orgName.count
+          'nameUnique': orgName._id + '-'+ orgName.count,
+          'admins': data.organization.admins
         }, (err, org) => {
           if (err) { return ecb('An internal error occurred'); }
-          org.admins.push(data.organization.admins[0])
-          org.save();
 
           // Add Organization to User
           User.findOneAndUpdate(
@@ -97,10 +104,23 @@ function getOrganizationsForUser(data, cb, ecb) {
   );
 }
 
+/*
+  @fn: createProject()
+  @modified: 170809
+  @inParams:
+  - data[organization][_id]
+  - data[organization][projects][accronym]
+  - data[organization][projects][name]
+  - data[organization][projects][description]
+  ? data[organization][projects][hours]
+  ? data[organization][projects][teamleaders]
+  ? data[organization][projects][users]
+  ? data[organization][projects][restricted]
+*/
 function createProject(data, cb, ecb) {
   Organization.findOneAndUpdate(
-    { '_id': data._id },
-    { '$push': { 'projects': data.projects } },
+    { '_id': data.organization._id },
+    { '$push': { 'projects': data.organization.projects } },
     { 'upsert': true, 'new': true },
     (err, org) => {
       if (err) { return ecb('An internal error occurred'); }
