@@ -163,14 +163,6 @@ function createTimecode(data, cb, ecb) {
     }
   );
 }
-let data = { 'organization': {
-  '_id': req.body._id,
-  'timecodes': {
-    'accronym': req.body.accronym,
-    'name': req.body.name,
-    'description': req.body.description
-  }
-}};
 
 
 
