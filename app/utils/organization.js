@@ -143,6 +143,15 @@ function getProject(data, cb, ecb) {
   );
 }
 
+/*
+  @fn: createTimecode()
+  @modified: 170809
+  @inParams:
+  - data[organization][_id]
+  - data[organization][timecodes][accronym]
+  - data[organization][timecodes][name]
+  - data[organization][timecodes][description]
+*/
 function createTimecode(data, cb, ecb) {
   Organization.findOneAndUpdate(
     { '_id': data._id },
@@ -154,7 +163,14 @@ function createTimecode(data, cb, ecb) {
     }
   );
 }
-
+let data = { 'organization': {
+  '_id': req.body._id,
+  'timecodes': {
+    'accronym': req.body.accronym,
+    'name': req.body.name,
+    'description': req.body.description
+  }
+}};
 
 
 
